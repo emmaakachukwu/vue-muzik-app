@@ -4,6 +4,14 @@
     <div class="route-content">
       <router-view/>
     </div>
+    <footer>
+      <section class="follow">
+          <p> ( : </p>
+      </section>
+      <section class="year">
+          <p>© 2020</p>
+      </section>
+    </footer>
   </div>
 </template>
 

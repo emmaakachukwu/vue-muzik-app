@@ -8,9 +8,16 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^18.0.0",
+    "@ckeditor/ckeditor5-ckfinder": "^18.0.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.1",
+    "@tinymce/tinymce-vue": "^3.2.0",
     "axios": "^0.19.2",
+    "ckeditor4-vue": "^0.2.0",
     "core-js": "^3.4.4",
+    "jquery": "^3.4.1",
     "vue": "^2.6.10",
+    "vue-loading-overlay": "^3.3.2",
     "vue-router": "^3.1.6"
   },
   "devDependencies": {

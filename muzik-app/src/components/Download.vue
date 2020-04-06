@@ -11,6 +11,8 @@
                 <p>{{datas.info || 'No song info available'}}</p>
             </section>
             <button class="dwnld-btn" @click="downloadFile">DOWNLOAD NOW</button>
+            <br>
+            <p class="posted-by">Posted by {{datas.uploaded_by}} on {{datas.time | formatDate}}</p>
         </div>
 
         <div v-else>
@@ -26,6 +28,7 @@ const axios = require('axios').default;
 export default {
     name: 'Download',
     created(){
+        this.progressLoader('show')
         let p = {
             key: 102,
             title: this.title,
@@ -39,13 +42,15 @@ export default {
                     this.audio = require('./../assets/audios/' + this.datas.audio_path)
                 } else {
                     this.datas = null
-                }                
+                }
             }
         )
+        this.progressLoader('h')
     },
     
     data(){
         return {
+            loader: null,
             data: DataMixin,
             title: this.$route.params.name.split('-')[1].split('_').join(' '),
             artiste: this.$route.params.name.split('-')[0].split('_').join(' '),
@@ -56,6 +61,20 @@ export default {
     },
 
     methods: {
+        progressLoader(req){
+            if ( req == 'show' ) {
+                this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    transition: 'fade',
+                    color: '#1d5bce',
+                    loader: 'spinner',
+                });
+            } else {
+                this.loader.hide()
+            }
+        },
+
         downloadFile(){
            axios({
                 url: this.audio,
@@ -66,7 +85,9 @@ export default {
                    let fileURL = window.URL.createObjectURL(new Blob([res.data]));
                    let fileLink = document.createElement('a')
                    fileLink.href = fileURL
-                   fileLink.setAttribute('download', this.datas.audio_path)
+                   let fileType = this.datas.audio_path.split('.')
+                   fileType = fileType[fileType.length - 1]
+                   fileLink.setAttribute('download', this.datas.artiste+' - '+this.datas.title+'.'+fileType)
                    document.body.appendChild(fileLink)
                    fileLink.click()
                }

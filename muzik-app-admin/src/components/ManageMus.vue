@@ -3,10 +3,10 @@
     <div class="btn-holder">
         <button class="upl-btn" v-on:click='modal = true'>Upload Muzik</button>
     </div>
-    <section class="holder" v-if="!files">
-        <h2>No file available</h2>
+    <section class="holder" v-if="files == 0">
+        <h2>No Music file available</h2>
     </section>
-    <section class="holder" v-else>
+    <section class="holder" v-if="files">
         <div class="slate" v-for="(file, index) in files" :key="index">
             <img :src="covers[index] || cover" alt="logo">
             <div>
@@ -113,23 +113,42 @@ export default {
                 artiste: '',
                 featured: '',
                 info: ''
-            }
-            
+            }            
         }
     },
 
     created () {
-        this.onLoad();
+        this.onLoad('load')
     },
 
     methods: {
-        onLoad(){
+        progressLoader(req){
+            if ( req == 'show' ) {
+                this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    transition: 'fade',
+                    color: '#1d5bce',
+                    loader: 'spinner',
+                });
+            } else {
+                this.loader.hide()
+            }
+        },
+        
+        onLoad(from = "form"){
+            from != 'form' ? this.progressLoader('show') : ""
             this.data.methods.postMethod( {key: 101} ).then(
                 res => {
-                    this.files = res.data.msg;
-                    this.files.forEach(e => {
-                        e.cover_path ? this.covers.push(require("./../assets/covers/" + e.cover_path)) : this.covers.push(null);
-                    });
+                    if ( res.data.code == 11 ) {
+                        this.files = res.data.msg;
+                        this.files.forEach(e => {
+                            e.cover_path ? this.covers.push(require("./../assets/covers/" + e.cover_path)) : this.covers.push(null);
+                        });
+                    } else {
+                        this.files = 0
+                    }
+                    this.progressLoader('h')
                 }
             );
         },
@@ -163,6 +182,7 @@ export default {
         },
 
         confirmDel(){
+            this.progressLoader('show')
             let p = {
                 key: 203,
                 email: localStorage.getItem('user'),
@@ -171,10 +191,11 @@ export default {
             this.data.methods.postMethod(p).then(
                 res => {
                     if ( res.data.code == 11 ) {
-                        this.onLoad();
-                        this.clearFields();
+                        this.clearFields()
+                        this.onLoad()                        
                     } else {
-                        this.error = res.data.msg;
+                        this.error = res.data.msg
+                        this.progressLoader('h')
                     }
                 }
             );
@@ -198,7 +219,7 @@ export default {
 
         submit(cover_path){
             if ( !this.editMode ) {
-                this.fd.set('audio', this.audio, this.ff.title);
+                this.fd.set('audio', this.audio, this.ff.artiste + '|' + this.ff.title + '|' + this.audio.name)
                 this.data.methods.postMethod(this.fd).then(
                     res => {
                         if ( res.data.code == 11 ) {
@@ -208,7 +229,7 @@ export default {
                                 artiste: this.ff.artiste,
                                 featured: this.ff.featured,
                                 info: this.ff.info,
-                                uploaded_by: localStorage.getItem('user') || 'user',
+                                uploaded_by: localStorage.getItem('user'),
                                 cover: cover_path,
                                 audio: res.data.msg
                             };
@@ -219,9 +240,13 @@ export default {
                                         this.clearFields();
                                     } else {
                                         this.error = res.data.msg;
+                                        this.progressLoader('h')
                                     }
                                 }
                             );
+                        } else {
+                            this.error = res.data.msg
+                            this.progressLoader('h')
                         }
                     }
                 );
@@ -242,7 +267,8 @@ export default {
                             this.clearFields();
                         } else {
                             this.error = res.data.msg;
-                        }
+                            this.progressLoader('h')
+                        }                        
                     }
                 );
             }
@@ -264,9 +290,10 @@ export default {
             }            
 
             if ( error == null ) {
+                this.progressLoader('show')
                 this.fd = new FormData();
                 if ( this.url && this.url.slice(0, 4) == 'blob' ) {
-                    this.fd.set('cover', this.cover, this.ff.title+'|'+this.cover.name);
+                    this.fd.set('cover', this.cover, this.ff.title+'|'+this.ff.artiste+'|'+this.cover.name);
                     this.data.methods.postMethod(this.fd).then(
                         res => {
                             if ( res.data.code == 11 ) {
@@ -274,6 +301,7 @@ export default {
                                 this.submit(cover_path);
                             } else {
                                 this.error = res.data.msg;
+                                this.progressLoader('h')
                             }                           
                         }
                     );

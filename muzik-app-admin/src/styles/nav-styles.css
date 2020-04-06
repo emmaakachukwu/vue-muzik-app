@@ -28,8 +28,12 @@ nav {
     margin-top: 20px;
 }
 
-li {
+a, #logout {
     padding: 15px 20px;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
 }
 
 .active {
@@ -40,7 +44,7 @@ li {
     box-shadow: #fff 1px 1px 15px;
 }
 
-li:hover {
+a:hover, #logout:hover {
     background-color: #fff;
     color: #000;
     font-weight: bold;
@@ -51,4 +55,3 @@ li:hover {
     margin-left: 250px;
     padding: 20px;
 }
-

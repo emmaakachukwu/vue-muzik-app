@@ -7,7 +7,7 @@
 
 html {
     font-family: 'ubuntu';
-    background-color: #F1F1F1;
+    background-color: #FFF;
 }
 
 .route-content {
@@ -36,7 +36,7 @@ input:-webkit-autofill {
 
 .holder {
     padding: 30px 0;
-    width: 50%;
+    width: 500px;
     margin: auto;
     min-height: calc(100vh - 280px);
 }
@@ -44,10 +44,12 @@ input:-webkit-autofill {
 .slate {
     padding: 10px;
     border-radius: 10px 0;
-    background-color: #fff;
-    border-left: 3px solid #1d5bce;
+    background-color: #F1F1F1;
+    border-left: 3px solid #137CE7;
     margin-bottom: 10px;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
 }
 
 .slate img {
@@ -55,11 +57,10 @@ input:-webkit-autofill {
     height: 50px;
     width: 50px;
     margin-right: 15px;
-    float: left;
 }
 
 .slate:hover {
-    box-shadow: #1d5bce 2px 1px 15px;
+    box-shadow: #137CE7 2px 1px 15px;
 }
 
 .file-details {
@@ -69,7 +70,7 @@ input:-webkit-autofill {
 
 .follow {
     height: 100px;
-    background: #1d5bce;
+    background: #137CE7;
     color: #FFF;
 }
 
@@ -119,8 +120,8 @@ input:-webkit-autofill {
     margin: 20px;
     padding: 10px;
     text-align: justify;
-    font-family: Arial, Helvetica, sans-serif;
-    border: 1px solid #888;
+    font-family: 'Raleway';
+    border: 1px solid #CCC;
     border-radius: 5px;
     color: #5c5757;
 }
@@ -132,16 +133,16 @@ input:-webkit-autofill {
 
 .dwnld-btn {
     margin: 0 20px;
-    border: 1px solid #1d5bce;
+    border: 1px solid #137CE7;
     background-color: #fff;
-    color: #1d5bce;
+    color: #137CE7;
     padding: 10px;
     border-radius: 5px;
 }
 
 .dwnld-btn:hover {
-    box-shadow: #1d5bce 1px 1px 8px;
-    background-color: #1d5bce;
+    box-shadow: #137CE7 1px 1px 8px;
+    background-color: #137CE7;
     color: #fff;
     font-weight: bold;
 }
@@ -151,7 +152,7 @@ input:-webkit-autofill {
     margin: 40px auto;
     width: 400px;
     padding: 20px;
-    box-shadow: #1d5bce 3px 2px 25px;
+    box-shadow: #137CE7 3px 2px 25px;
     box-sizing: border-box;
 }
 
@@ -168,12 +169,12 @@ input:-webkit-autofill {
 .sign input:focus {
     padding: 11px;
     border: none;
-    box-shadow: #1d5bce 1px 1px 8px;
+    box-shadow: #137CE7 1px 1px 8px;
 }
 
 .sign h3 {
     text-align: center;
-    color: #1d5bce;
+    color: #137CE7;
 }
 
 .sign label {
@@ -183,7 +184,7 @@ input:-webkit-autofill {
 
 .sign button {
     border: none;
-    background-color: #1d5bce;
+    background-color: #137CE7;
     color: #fff;
     padding: 10px;
     letter-spacing: 1px;
@@ -192,10 +193,10 @@ input:-webkit-autofill {
 
 .sign button:hover {
     padding: 9px;
-    box-shadow: #1d5bce 1px 1px 8px;
+    box-shadow: #137CE7 1px 1px 8px;
     background-color: #fff;
-    color: #1d5bce;
-    border: 1px solid #1d5bce;
+    color: #137CE7;
+    border: 1px solid #137CE7;
 }
 
 .sign .form-footer {
@@ -209,9 +210,19 @@ input:-webkit-autofill {
     text-decoration: none;
 }
 
+/********** READ **********/
+
+.news-header, .posted-by {
+    margin: 20px;
+    font-family: 'Raleway';
+}
+
 @media ( max-width: 768px ) {
     .sign {
-        width: 100%;
-        margin: 20px;
+        width: 90%;
+    }
+
+    .posted-by {
+        font-size: small;
     }
 }

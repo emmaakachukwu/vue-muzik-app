@@ -42,22 +42,21 @@ export default {
     },
 
     methods: {
-            progressLoader(req){
-                if ( req == 'show' ) {
-                    this.loader = this.$loading.show({
-                        container: this.fullPage ? null : this.$refs.formContainer,
-                        canCancel: true,
-                        onCancel: this.onCancel,
-                        transition: 'fade',
-                        color: '#1d5bce',
-                        loader: 'dots',
-                        backgroundColor: '#000',
-                        opacity: .9,
-                    });
-                } else {
-                    this.loader.hide()
-                }
-            },
+        progressLoader(req){
+            if ( req == 'show' ) {
+                this.loader = this.$loading.show({
+                    container: this.fullPage ? null : this.$refs.formContainer,
+                    canCancel: true,
+                    transition: 'fade',
+                    color: '#1d5bce',
+                    loader: 'dots',
+                    backgroundColor: '#000',
+                    opacity: .9,
+                });
+            } else {
+                this.loader.hide()
+            }
+        },
 
         login(){
             this.progressLoader('show')

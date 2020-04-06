@@ -4,9 +4,9 @@
     <br>
     <p class="error">{{error}}</p>
     <br>
-    <label>Email or Username</label>
+    <label>Email</label>
     <br>
-    <input placeholder='Enter email or username' v-model="user">
+    <input type="email" placeholder='Enter email address' v-model="user">
     <br>
     <br>
     <label>Password</label>
@@ -22,7 +22,6 @@
 
 <script>
 import { DataMixin } from "./../mixins/datamixin";
-import router from './../router';
 
 export default {
   name: 'AdminLogin',
@@ -37,7 +36,24 @@ export default {
   },
 
   methods: {
+    progressLoader(req){
+      if ( req == 'show' ) {
+        this.loader = this.$loading.show({
+          container: this.fullPage ? null : this.$refs.formContainer,
+          canCancel: true,
+          transition: 'fade',
+          color: '#1d5bce',
+          loader: 'dots',
+          backgroundColor: '#000',
+          opacity: .9,
+        });
+      } else {
+        this.loader.hide() 
+      }
+    },
+
     login(){
+      this.progressLoader('show')
       let p = {
         key: 201,
         user: this.user,
@@ -46,10 +62,13 @@ export default {
       this.dataMethods.postMethod(p).then(
         res => {
           if ( res.data.code === 11 ) {
-            this.error = '';
-            router.push( {name: 'man-mus'} );
+            this.error = "";
+            localStorage.setItem('user', p.user)
+            this.progressLoader('h')
+            this.$router.push( {name: 'man-mus'} );
           } else {
             this.error = res.data.msg;
+            this.progressLoader('h')
           }
         }
       )

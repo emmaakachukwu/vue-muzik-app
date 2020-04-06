@@ -35,6 +35,8 @@ li {
 button {
   cursor: pointer;
   border: none;
+  padding: 0px;
+  height: auto;
 }
 
 .error {

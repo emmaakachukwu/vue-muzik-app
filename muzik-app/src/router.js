@@ -4,6 +4,9 @@ import Home from './components/Home';
 import Download from './components/Download';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import News from './components/News';
+import Muzik from './components/Muzik';
+import Read from './components/Read';
 
 Vue.use(Router);
 
@@ -36,6 +39,24 @@ const route = new Router ({
             path: '/signup',
             name: 'signup',
             component: Signup
+        },
+
+        {
+            path: '/news',
+            name: 'news',
+            component: News
+        },
+
+        {
+            path: '/muzik',
+            name: 'muzik',
+            component: Muzik
+        },
+
+        {
+            path: '/read/:news',
+            name: 'read',
+            component: Read
         }
     ]
 })
@@ -46,6 +67,6 @@ route.beforeEach( (to, from, next) => {
     } else {
         next()
     }
-})
+} )
 
 export default route

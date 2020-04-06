@@ -5,18 +5,18 @@
       <nav class="main-nav">      
         <a class="menu-btn" href="#">MENU</a>
         <ul>                  
-            <li><router-link :to="{name: 'home'}" class="link" active-class="active">HOME</router-link></li>
-            <li v-if="!session"><router-link :to="{name: 'login'}" class="link" active-class="active">LOGIN</router-link></li>
-            <li v-if="!session"><router-link :to="{name: 'signup'}" class="link" active-class="active">SIGNUP</router-link></li>
-            <li><a href="#" class="link">CONTACT</a></li>
-            <li id="logout" v-if="session" @click="logOut"><a class="link">LOGOUT</a></li>
+          <li><router-link :to="{name: 'home'}" class="link" active-class="active">HOME</router-link></li>
+          <li v-if="!session"><router-link :to="{name: 'login'}" class="link" active-class="active">LOGIN</router-link></li>
+          <li v-if="!session"><router-link :to="{name: 'signup'}" class="link" active-class="active">SIGNUP</router-link></li>
+          <li><a href="#" class="link">CONTACT</a></li>
+          <li id="logout" v-if="session" @click="logOut"><a class="link">LOGOUT</a></li>
         </ul>
       </nav>
     </header>
     <nav class="sub-nav">
       <ul>
-        <li class="center"><a href="#">Link A</a></li>
-        <li class="center"><a href="#">Link B</a></li>
+        <li class="center"><router-link to="#" active-class="active">Muzik</router-link></li>
+        <li class="center"><router-link :to="{name: 'news'}" active-class="active">News</router-link></li>
         <li class=""><a href="#">Link C</a></li>
       </ul>
     </nav>
@@ -55,7 +55,7 @@ header {
   display: block;
   width: 100%;
   height: 50px;
-  background: #1d5bce;
+  background: #137CE7;
   box-sizing: border-box;
   padding: 0 60px;
 }
@@ -121,7 +121,7 @@ ul li a:hover, .active {
 @media ( max-width: 768px ) {
   .main-nav ul {
     display: none;
-    background: #1d5bce;
+    background: #137CE7;
     width: 40%;
     border: 1px solid #888;
     z-index: 1000;

@@ -10,14 +10,14 @@ $file = $_FILES;
 define('key', post['key']);
 
 if ( isset($file['cover']) ) {
-    $target_dir = "/home/ace/Desktop/muzik-app/src/assets/covers/";
-    $target_dir2 = "/home/ace/Desktop/muzik-app-admin/src/assets/covers/";
+    $target_dir = "/opt/lampp/htdocs/vue-muzik-app/muzik-app/src/assets/covers/";
+    $target_dir2 = "/opt/lampp/htdocs/vue-muzik-app/muzik-app-admin/src/assets/covers/";
     $target_file = $target_dir . basename($_FILES["cover"]["name"]);
     $fileType = strtolower( pathinfo($target_file,PATHINFO_EXTENSION) );
-    $filename = 'cover-'.substr(SHA1($file['cover']['name'] ), 0, 5).'.'.$fileType;
+    $filename = 'cover-'.substr(MD5($file['cover']['name'] ), 0, 15).'.'.$fileType;
     $path = $target_dir.$filename;
     $path2 = $target_dir2.$filename;
-    $formats = ['jpg', 'png', 'gif', 'jpeg', 'jfif'];
+    $formats = ['jpg', 'png', 'jpeg', 'jfif'];
 
     if ( !in_array($fileType, $formats) ) {
         $code = 10; $msg = "Please choose a valid photo";
@@ -35,10 +35,11 @@ if ( isset($file['cover']) ) {
 }
 
 if ( isset($file['audio']) ) {
-    $target_dir = "/home/ace/Desktop/muzik-app/src/assets/audios/";
+    $target_dir = "/opt/lampp/htdocs/vue-muzik-app/muzik-app/src/assets/audios/";
     $target_file = $target_dir . basename($_FILES["audio"]["name"]);
-    $fileType = strtolower( explode('/', $file['audio']['type'])[1] );
-    $filename = $file['audio']['name'] . '.' . $fileType;
+    // $fileType = strtolower( explode('/', $file['audio']['type'])[1] );
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $filename = 'audio-'.substr(MD5($file['audio']['name']), 0, 20) . '.' . $fileType;
     $path = $target_dir.$filename;
 
     if ( explode('/', $file['audio']['type'])[0] != 'audio' ) {
@@ -183,7 +184,7 @@ if ( key == 202 ) {
         $col = 'title';
         $tab = 'files';
         $set = " title = '$title', artiste = '$artiste', featured = '$featured', info = '$info', cover_path = '$cover' ";
-        $where = !isset($id) ? " WHERE title = '$title' " : " WHERE title = '$title' && id != '$id' ";
+        $where = !isset($id) ? " WHERE title = '$title' && artiste = '$artiste' " : " WHERE title = '$title' && id != '$id' ";
         if ( $sql->select($col, $tab, $where) ) {
             $code = 10; $msg = 'Muzik already exists';
         } else {
@@ -207,6 +208,7 @@ if ( key == 202 ) {
     }
 }
 
+// to delete muzik
 if ( key == 203 ) {
     $tab = 'files';
     $col = 'uploaded_by';
@@ -221,6 +223,103 @@ if ( key == 203 ) {
         }
     } else {
         $code = 10; $msg = " You do not have the permission to delete this file as you did not upload it";
+    }
+}
+
+//to fetch news
+if ( key == 204 ) {
+    $col = '*';
+    $tab = 'news';
+    $where = " WHERE deleted = 0 ";
+    if ( $res = $sql->fetch_assoc($col, $tab, $where) ) {
+        $code = 11; $msg = $res;
+    } else {
+        $code = 10; $msg = $res;
+    }
+}
+
+// for uploading news
+if ( key == 205 ) {
+    // die(var_dump(post));
+    $required = ['title', 'info'];
+    foreach ( post as $key => $value ) {
+        if ( in_array($key, $required) ) {
+            if ( empty($value) ) {
+                $code = 10; $msg = ucwords($key). ' is required';
+            }
+        }
+    }
+    if ( !isset($code) ) {
+        $col = 'title';
+        $tab = 'news';
+        $set = " title = '$title', info = '$info', cover = '$cover' ";
+        $where = !isset($id) ? " WHERE title = '$title' && info = '$info' " : " WHERE title = '$title' && id != '$id' ";
+        if ( $sql->select($col, $tab, $where) ) {
+            $code = 10; $msg = 'News already uploaded';
+        } else {
+            if ( !isset($id) ) {
+                $cols = " title, info, uploaded_by, cover";
+                $vals = " '$title', '$info', '$uploaded_by', '$cover' ";
+                if ( $sql->insert($tab, $cols, $vals) ) {
+                    $code = 11; $msg = "News uploaded";
+                } else {
+                    $code = 10; $msg = "News upload error; retry";
+                }
+            } else {
+                $where = " WHERE id = '$id' ";
+                if ( $sql->update($tab, $set, $where) ) {
+                    $code = 11; $msg = "News has been updated successfully";
+                } else {
+                    $code = 10; $msg = "News update error; retry";
+                }
+            }
+        }
+    }
+}
+
+// to delete news
+if ( key == 206 ) {
+    $tab = 'news';
+    $col = 'uploaded_by';
+    $set = " deleted = 1";
+    $where = " WHERE uploaded_by = '$email' && id = '$id' ";
+    if ( $sql->select($col, $tab, $where) ) {
+        $where = " WHERE id = '$id' ";
+        if ( $sql->update($tab, $set, $where) ) {
+            $code = 11; $msg = "News has been deleted";
+        } else {
+            $code = 10; $msg = "error; retry";
+        }
+    } else {
+        $code = 10; $msg = " You do not have the permission to delete this file as you did not upload it";
+    }
+}
+
+// fetch news details
+if ( key == 105 ) {
+    $col = '*';
+    $tab = 'news';
+    $where = " WHERE title = '$title' && deleted = 0 ";
+    if ( $res = $sql->select_fetch($col, $tab, $where) ) {
+        $code = 11; $msg = $res;
+    } else {
+        $code = 10; $msg = $res;
+    }
+}
+
+// fetch both news and files
+if ( key == 106 ) {
+    $col = '*';
+    $tab = 'files';
+    $tab2 = 'news';
+    $where = " WHERE deleted = 0 ";
+    if ( ($res = $sql->fetch_assoc($col, $tab, $where)) && ($res2 = $sql->fetch_assoc($col, $tab2, $where)) ) {
+        foreach ($res2 as $key => $value) {
+            array_push($res, $value);
+        }
+        $code = 11; $msg = $res;
+    } else {
+        $code = 10; $msg = null;
     }
 }
 

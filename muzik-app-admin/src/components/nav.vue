@@ -7,11 +7,11 @@
     <div class="navs">
         <nav>
             <ul>
-                <li class="active">Music</li>
-                <li>Upload News</li>
-                <li>Another Nav</li>
+                <li><router-link :to="{name: 'man-mus'}" active-class="active">Music</router-link></li>
+                <li><router-link :to="{name: 'news'}" active-class="active">News</router-link></li>
+                <li><router-link to="#" active-class="active">Another Nav</router-link></li>
                 <br>
-                <li @click="data.methods.logout()">Logout</li>
+                <li id="logout" @click="logout">Logout</li>
             </ul>
         </nav>
     </div>
@@ -28,9 +28,17 @@ import { DataMixin } from './../mixins/datamixin';
 
 export default {
     name: 'NavBar',
+
     data(){
         return {
             data: DataMixin
+        }
+    },
+
+    methods: {
+        logout(){
+            localStorage.clear();
+            this.$router.push({name: 'admin-login'});
         }
     }
 }

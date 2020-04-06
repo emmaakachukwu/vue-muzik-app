@@ -1,18 +1,16 @@
 <template>
-    <body>
-        <!-- Header and Nav -->
-       
-        <!-- main content -->
+    <body>       
         <section class="holder" v-if="files == 0">
             No file available
         </section>
         <section class="holder" v-else>
-            <div class="slate" v-for="(file, i) in files" :key="i" v-on:click="openFile(file.artiste, file.title, file.type)">
-                <img :src="covers[i] || cover" alt="cover">
+            <div class="slate" v-for="(file, i) in files" :key="file.id" v-on:click="openMuzik(file.artiste, file.title)">
+                <img :src="covers[i] || cover" alt="logo">
                 <div>
+                    <b class="file-details">{{file.title}}</b>
                     <br>
-                    <p class="file-details" v-if="file.type == 'download'">{{file.title}} by {{file.artiste}} <span v-if="file.featured">(feat. {{file.featured}})</span></p>
-                    <p class="file-details" v-else>{{file.title}}</p>
+                    <p class="file-details">Artiste: {{file.artiste}}</p>
+                    <p class="file-details">Feat: {{file.featured || 'Nill'}}</p>
                 </div>
             </div>
         </section>
@@ -23,8 +21,7 @@
     import { DataMixin } from './../mixins/datamixin';
 
     export default {
-        name: 'Home',
-        // mixins: [DataMixin],
+        name: 'Muzik',
         data () {
             return {
                 data: DataMixin,
@@ -55,23 +52,10 @@
 
             onLoad(){
                 this.progressLoader('show')
-                this.data.methods.postMethod( {key: 106} ).then(
+                this.data.methods.postMethod( {key: 101} ).then(
                     res => {
                         if ( res.data.code == 11 ) {
-                            console.log(res.data.msg)
                             this.files = res.data.msg;
-                            this.files.sort(function(a, b){
-                                let timeA = Date.parse(a.time)
-                                let timeB = Date.parse(b.time)
-                                let result;
-                                if ( timeA > timeB ) {
-                                    result = 1
-                                } else if ( timeA < timeB ) {
-                                    result = -1
-                                }
-                                return result
-                            })
-                            this.files.reverse()
                             this.files.forEach(e => {
                                 e.cover_path ? this.covers.push(require("./../assets/covers/" + e.cover_path)) : this.covers.push(null);
                             });
@@ -79,21 +63,16 @@
                         } else {
                             this.files = 0
                             this.progressLoader('h')
-                        }                        
+                        }
                     }
                 );
             },
 
-            openFile(artiste, title, type){
-                if ( type == 'download' ) {
-                    let a = artiste.split(' ').join('_')
-                    let t = title.split(' ').join('_')
-                    let at = a + '-' + t;
-                    this.$router.push({path: 'download/' + at})
-                } else {
-                    let t = title.split(' ').join('-')
-                    this.$router.push({path: 'read/'+t})
-                }
+            openMuzik(artiste, title){
+                let a = artiste.split(' ').join('_')
+                let t = title.split(' ').join('_')
+                let at = a + '-' + t;
+                this.$router.push({path: 'download/' + at})
             }
         }
     }
